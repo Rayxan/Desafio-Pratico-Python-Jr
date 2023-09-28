@@ -6,6 +6,7 @@ import models
 import schemas
 import xmltodict
 import xmlschema
+from lxml import etree
  
 Base.metadata.create_all(engine) # Create the database
  
@@ -85,79 +86,87 @@ def read_nfe_list(session: Session = Depends(get_session)):
 
 @app.post("/upload", status_code=status.HTTP_201_CREATED)
 async def upload(file:UploadFile = File(...), session: Session = Depends(get_session)):
-    with open(file.filename, 'r', encoding='utf-8') as xml_file:
-        xml_data = xml_file.read()
+    try:
+        xml_data = await file.read()
 
-    nfe_dict = xmltodict.parse(xml_data)
+        #validação
+        xml_root = etree.fromstring(xml_data)
 
-    nfe_info = nfe_dict['nfeProc']['NFe']['infNFe']
+        nfe_dict = xmltodict.parse(xml_data)
 
-    nfe_numero = nfe_info['ide']['nNF']
-    nProt = nfe_dict['nfeProc']['protNFe']['infProt']['nProt']
-    UF = nfe_dict['nfeProc']['protNFe']['infProt']['tpAmb']
-    cStat = nfe_dict['nfeProc']['protNFe']['infProt']['cStat']
-    cNF = nfe_info['ide']['cNF']
-    natOp = nfe_info['ide']['natOp']
-    mod = nfe_info['ide']['mod']
-    serie = nfe_info['ide']['serie']
-    dhEmi = nfe_info['ide']['dhEmi']
-    dhSaiEnt = nfe_info['ide'].get('dhSaiEnt')
-    tpNF = nfe_info['ide']['tpNF']
-    cMunFG = nfe_info['ide']['cMunFG']
-    tpEmis = nfe_info['ide']['tpEmis']
-    tpAmb = nfe_info['ide']['tpAmb']
-    vBC = nfe_info['total']['ICMSTot']['vBC']
-    vICMS = nfe_info['total']['ICMSTot']['vICMS']
-    vICMSDeson = nfe_info['total']['ICMSTot']['vICMSDeson']
-    vBCST = nfe_info['total']['ICMSTot']['vBCST']
-    vST = nfe_info['total']['ICMSTot']['vST']
-    vProd = nfe_info['total']['ICMSTot']['vProd']
-    vFrete = nfe_info['total']['ICMSTot']['vFrete']
-    vSeg = nfe_info['total']['ICMSTot']['vSeg']
-    vDesc = nfe_info['total']['ICMSTot']['vDesc']
-    vII = nfe_info['total']['ICMSTot']['vII']
-    vPIS = nfe_info['total']['ICMSTot']['vPIS']
-    vCOFINS = nfe_info['total']['ICMSTot']['vCOFINS']
-    vNF = nfe_info['total']['ICMSTot']['vNF']
-    vTotTrib = nfe_info['total']['ICMSTot']['vTotTrib']
+        nfe_info = nfe_dict['nfeProc']['NFe']['infNFe']
 
-    nfedb = models.Nfe(
-        chNFe=nfe_numero,
-        nProt=nProt,
-        UF=UF,
-        cStat=cStat,
-        cNF=cNF,
-        natOp=natOp,
-        mod=mod,
-        serie=serie,
-        nNF=nfe_numero,
-        dhEmi=dhEmi,
-        dhSaiEnt=dhSaiEnt,
-        tpNF=tpNF,
-        cMunFG=cMunFG,
-        tpEmis=tpEmis,
-        tpAmb=tpAmb,
-        vBC=vBC,
-        vICMS=vICMS,
-        vICMSDeson=vICMSDeson,
-        vBCST=vBCST,
-        vST=vST,
-        vProd=vProd,
-        vFrete=vFrete,
-        vSeg=vSeg,
-        vDesc=vDesc,
-        vII=vII,
-        vPIS=vPIS,
-        vCOFINS=vCOFINS,
-        vNF=vNF,
-        vTotTrib=vTotTrib
-    )
+        nfe_numero = nfe_info['ide']['nNF']
+        nProt = nfe_dict['nfeProc']['protNFe']['infProt']['nProt']
+        UF = nfe_dict['nfeProc']['protNFe']['infProt']['tpAmb']
+        cStat = nfe_dict['nfeProc']['protNFe']['infProt']['cStat']
+        cNF = nfe_info['ide']['cNF']
+        natOp = nfe_info['ide']['natOp']
+        mod = nfe_info['ide']['mod']
+        serie = nfe_info['ide']['serie']
+        dhEmi = nfe_info['ide']['dhEmi']
+        dhSaiEnt = nfe_info['ide'].get('dhSaiEnt')
+        tpNF = nfe_info['ide']['tpNF']
+        cMunFG = nfe_info['ide']['cMunFG']
+        tpEmis = nfe_info['ide']['tpEmis']
+        tpAmb = nfe_info['ide']['tpAmb']
+        vBC = nfe_info['total']['ICMSTot']['vBC']
+        vICMS = nfe_info['total']['ICMSTot']['vICMS']
+        vICMSDeson = nfe_info['total']['ICMSTot']['vICMSDeson']
+        vBCST = nfe_info['total']['ICMSTot']['vBCST']
+        vST = nfe_info['total']['ICMSTot']['vST']
+        vProd = nfe_info['total']['ICMSTot']['vProd']
+        vFrete = nfe_info['total']['ICMSTot']['vFrete']
+        vSeg = nfe_info['total']['ICMSTot']['vSeg']
+        vDesc = nfe_info['total']['ICMSTot']['vDesc']
+        vII = nfe_info['total']['ICMSTot']['vII']
+        vPIS = nfe_info['total']['ICMSTot']['vPIS']
+        vCOFINS = nfe_info['total']['ICMSTot']['vCOFINS']
+        vNF = nfe_info['total']['ICMSTot']['vNF']
+        vTotTrib = nfe_info['total']['ICMSTot']['vTotTrib']
 
-    # Add the new Nfe item to the database
-    session.add(nfedb)
-    session.commit()
-    session.refresh(nfedb)
+        nfedb = models.Nfe(
+            chNFe=nfe_numero,
+            nProt=nProt,
+            UF=UF,
+            cStat=cStat,
+            cNF=cNF,
+            natOp=natOp,
+            mod=mod,
+            serie=serie,
+            nNF=nfe_numero,
+            dhEmi=dhEmi,
+            dhSaiEnt=dhSaiEnt,
+            tpNF=tpNF,
+            cMunFG=cMunFG,
+            tpEmis=tpEmis,
+            tpAmb=tpAmb,
+            vBC=vBC,
+            vICMS=vICMS,
+            vICMSDeson=vICMSDeson,
+            vBCST=vBCST,
+            vST=vST,
+            vProd=vProd,
+            vFrete=vFrete,
+            vSeg=vSeg,
+            vDesc=vDesc,
+            vII=vII,
+            vPIS=vPIS,
+            vCOFINS=vCOFINS,
+            vNF=vNF,
+            vTotTrib=vTotTrib
+        )
 
-    return {"message": "NFe processada e salva com sucesso"}
+        # Add the new Nfe item to the database
+        session.add(nfedb)
+        session.commit()
+        session.refresh(nfedb)
+
+        return {"message": "NFe processada e salva com sucesso"}
+
+    except:
+        raise HTTPException(status_code=400, detail=f"XML NFE inválida")
+    # except Exception as e:
+    #     raise HTTPException(status_code=400, detail=f"Erro ao processar o XML: {str(e)}")
 
    
