@@ -1,8 +1,37 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, DateTime, Date, DECIMAL
 from database import Base
- 
+
 # Define Nfe class from Base
 class Nfe(Base):
     __tablename__ = 'nfes'
     id = Column(Integer, primary_key=True)
-    task = Column(String(256))
+    # chNFe = Column(String(44), unique=True)
+    chNFe = Column(String(44))
+    nProt = Column(String(50), nullable=True)
+    UF = Column(String(2))
+    cStat = Column(String(3))
+    cNF = Column(String(20), nullable=True)  
+    natOp = Column(String(100), nullable=True)  
+    mod = Column(String(10))  
+    serie = Column(String(10), nullable=True)  
+    nNF = Column(String(20), nullable=True)  
+    dhEmi = Column(DateTime(timezone=True))
+    dhSaiEnt = Column(DateTime(timezone=True), nullable=True)
+    tpNF = Column(Integer, nullable=True)
+    cMunFG = Column(String(10), nullable=True)  
+    tpEmis = Column(String(10), nullable=True)  
+    tpAmb = Column(String(10), nullable=True)  
+    vBC = Column(DECIMAL(13, 2), nullable=True)
+    vICMS = Column(DECIMAL(13, 2), nullable=True)
+    vICMSDeson = Column(DECIMAL(13, 2), nullable=True)
+    vBCST = Column(DECIMAL(13, 2), nullable=True)
+    vST = Column(DECIMAL(13, 2), nullable=True)
+    vProd = Column(DECIMAL(13, 2), nullable=True)
+    vFrete = Column(DECIMAL(13, 2), nullable=True)
+    vSeg = Column(DECIMAL(13, 2), nullable=True)
+    vDesc = Column(DECIMAL(13, 2), nullable=True)
+    vII = Column(DECIMAL(13, 2), nullable=True)
+    vPIS = Column(DECIMAL(13, 2), nullable=True)
+    vCOFINS = Column(DECIMAL(13, 2), nullable=True)
+    vNF = Column(DECIMAL(13, 2), nullable=True)
+    vTotTrib = Column(DECIMAL(13, 2), nullable=True)
