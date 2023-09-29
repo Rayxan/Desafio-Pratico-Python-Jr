@@ -16,7 +16,7 @@ O objetivo deste teste é avaliar sua habilidade em desenvolver uma API REST usa
 
 3. **Endpoints de Consulta ID(GET /nfe/{nfe_id})**
     - Exibição de detalhes específicos de uma NFE, buscada pelo seu ID ou chave de acesso.
-
+    - Na implementação em questão, a consulta é a através da `chNFe` da nota.
 
 ## Pré-requisitos
 
