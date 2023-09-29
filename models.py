@@ -1,12 +1,10 @@
 from sqlalchemy import Column, Integer, String, DateTime, Date, DECIMAL
 from database import Base
 
-# Define Nfe class from Base
 class Nfe(Base):
     __tablename__ = 'nfes'
     id = Column(Integer, primary_key=True)
-    # chNFe = Column(String(44), unique=True)
-    chNFe = Column(String(44))
+    chNFe = Column(String(44), unique=True)
     nProt = Column(String(50), nullable=True)
     UF = Column(String(2))
     cStat = Column(String(3))
