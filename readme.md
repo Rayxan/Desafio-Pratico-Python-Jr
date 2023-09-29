@@ -29,7 +29,7 @@ No seu terminal rode o seguinte comando
 pip install -r requirements.txt
 ```
 Acesse o arquivo database.py e configure suas credenciais de banco mysql, e crie um banco chamado `desafio`.
-```
+```python
 # database.py
 engine = create_engine("mysql+pymysql://root@localhost:3306/desafio")
 ```
